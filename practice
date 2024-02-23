@@ -1,0 +1,27 @@
+use nhs;
+SELECT * FROM ukcoviddata LIMIT 3;
+
+-- how many cases were there is 20201?
+
+SELECT Date AS year FROM ukcoviddata WHERE Date = 2021;
+
+-- which months in 2021 did deaths per day increase?
+SELECT SUM(DeathsPerDay) AS 'Deaths Per Month', SUBSTR(Date, 6, 2) AS subs
+FROM ukcoviddata 
+GROUP BY subs
+ORDER BY 'Deaths Per Month';
+
+SELECT * FROM ukcoviddata WHERE Date LIKE '%10-%';
+
+SELECT Date, DeathsPerDay FROM ukcoviddata
+WHERE DeathsPerDay = (SELECT MIN(DeathsPerDay) FROM ukcoviddata);
+
+SELECT SUBSTR(Date, 6, 2), 
+MAX(DeathsPerDay), 
+MIN(DeathsPerDay) 
+FROM ukcoviddata 
+GROUP BY SUBSTR(Date, 6, 2);
+
+SELECT MAX(DeathsPerDay), 
+MIN(DeathsPerDay) 
+FROM ukcoviddata;
