@@ -1,27 +1,34 @@
 use nhs;
-SELECT * FROM ukcoviddata LIMIT 3;
 
--- how many cases were there is 20201?
+SELECT * FROM ukcoviddata LIMIT 10;
+WHERE CasesPerDay > 30000 
+AND Date LIKE '%2021-10%'; 
 
-SELECT Date AS year FROM ukcoviddata WHERE Date = 2021;
+SELECT * FROM ukcoviddata;
 
--- which months in 2021 did deaths per day increase?
-SELECT SUM(DeathsPerDay) AS 'Deaths Per Month', SUBSTR(Date, 6, 2) AS subs
-FROM ukcoviddata 
-GROUP BY subs
-ORDER BY 'Deaths Per Month';
+SELECT CONCAT_WS(" ", CasesPerDay, "cases on", Date) AS "Cases Per Day"
+FROM ukcoviddata ORDER BY CasesPerDay DESC;
 
-SELECT * FROM ukcoviddata WHERE Date LIKE '%10-%';
+SELECT CONCAT(SUBSTR(Date, 1, 4)) AS "Year", CasesPerDay FROM ukcoviddata;
 
-SELECT Date, DeathsPerDay FROM ukcoviddata
-WHERE DeathsPerDay = (SELECT MIN(DeathsPerDay) FROM ukcoviddata);
+SELECT * FROM ukcoviddata;
 
-SELECT SUBSTR(Date, 6, 2), 
-MAX(DeathsPerDay), 
-MIN(DeathsPerDay) 
-FROM ukcoviddata 
-GROUP BY SUBSTR(Date, 6, 2);
+#how many cases per month in 2021 were there?
 
-SELECT MAX(DeathsPerDay), 
-MIN(DeathsPerDay) 
-FROM ukcoviddata;
+SELECT SUBSTR(Date, 6, 2) as 'Month', SUM(CasesPerDay) FROM ukcoviddata 
+GROUP by SUBSTR(Date, 6, 2);
+
+
+SELECT DATE_FORMAT(Date,'%M') AS 'Month', SUM(CasesPerDay) AS 'Cases Per Day' FROM ukcoviddata 
+GROUP by DATE_FORMAT(Date,'%M');
+
+SELECT SUM(CasesPerDay) AS 'Total Cases' FROM ukcoviddata;
+
+SELECT DATE_FORMAT(Date, '%M') AS 'Month', FORMAT(SUM(FirstVaccineGiven), 0) AS 'First Vaccine Uptake', FORMAT(SUM(SecondVaccineGiven), 0) AS 'Second Vaccine Uptake' FROM ukcoviddata
+GROUP BY DATE_FORMAT(Date, '%M');
+
+SELECT * FROM ukcoviddata
+LIMIT 20;
+
+SELECT DATE_FORMAT(Date,'%M') AS 'Month', SUM(DeathsPerDay) AS 'Deaths' FROM ukcoviddata 
+GROUP by DATE_FORMAT(Date,'%M');
